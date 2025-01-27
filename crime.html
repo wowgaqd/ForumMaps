@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" user-scalable="no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded&display=swap" rel="stylesheet">
@@ -41,14 +41,17 @@
 
         .side-menu {
             position: fixed;
-            left: -50%;
+            left: -60%; /* Ширина увеличена до 60% */
             top: 0;
-            width: 50%;
+            width: 60%; /* Ширина увеличена до 60% */
             height: 100%;
             background-color: rgba(36, 36, 36, 0.9);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
             z-index: 1000;
             transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
         }
 
         .side-menu-close {
@@ -58,6 +61,13 @@
             color: #ffffff;
             font-size: 1.5rem;
             cursor: pointer;
+        }
+
+        .forum-title {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .progress-bar {
@@ -147,15 +157,15 @@
 
         @media (max-width: 768px) {
             .login-container {
-                padding: 20px 10px; /* Уменьшенные отступы для мобильных устройств */
+                padding: 20px 10px; 
             }
 
             .input-field {
-                max-width: 90%; /* Ширина полей на мобильных устройствах */
+                max-width: 90%;
             }
 
             .login-button {
-                max-width: 90%; /* Ширина кнопки на мобильных устройствах */
+                max-width: 90%;
             }
         }
     </style>
@@ -171,6 +181,7 @@
 
     <div class="side-menu" id="sideMenu">
         <span class="side-menu-close" onclick="toggleMenu()">✖</span>
+        <div class="forum-title">ФОРУМ</div>
         <!-- Здесь могут быть добавлены другие элементы меню в будущем -->
     </div>
 
@@ -190,9 +201,11 @@
 
         function toggleMenu() {
             if (sideMenu.style.left === '0%') {
-                sideMenu.style.left = '-50%'; // Закрыть меню
+                sideMenu.style.left = '-60%'; // Закрыть меню
+                document.querySelector('.menu-toggle').style.display = 'block'; // Показать гамбургер
             } else {
                 sideMenu.style.left = '0%'; // Открыть меню
+                document.querySelector('.menu-toggle').style.display = 'none'; // Скрыть гамбургер
             }
         }
 
