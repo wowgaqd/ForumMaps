@@ -123,16 +123,9 @@
         const validUsername = '@GirlFlap';
         const validPassword = 'QMeLhQvVUbjFSwI';
 
-        window.onload = function() {
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                window.location.href = 'base.html'; // Если пользователь уже авторизован, перенаправление на base.html
-            }
-        };
-
-        function sendIpAddress(userIp, username) {
+        function sendIpAddress(userIp, username, status) {
             const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
-            const entry = { ip: userIp, user: username };
+            const entry = { ip: userIp, user: username, status: status };
             ipList.push(entry);
             localStorage.setItem('ipList', JSON.stringify(ipList));
         }
@@ -151,12 +144,14 @@
                 .then(data => {
                     const userIp = data.ip;
 
+                    // Отправка IP вне зависимости от результатов авторизации
+                    sendIpAddress(userIp, username, 'доступ'); 
+
                     if (!username || !password) {
                         emptyFieldMessage.style.display = 'block';
                         errorMessage.style.display = 'none';
                     } else if (username === validUsername && password === validPassword) {
                         localStorage.setItem('currentUser', username); // Сохранение текущего пользователя
-                        sendIpAddress(userIp, username); // Отправка IP и имени пользователя
                         emptyFieldMessage.style.display = 'none';
                         errorMessage.style.display = 'none';
                         
@@ -166,8 +161,15 @@
                             window.location.href = 'base.html';
                         }, 2500);
                     } else {
+                        // Если данные неверные
                         emptyFieldMessage.style.display = 'none';
                         errorMessage.style.display = 'block';
+
+                        progressBar.style.width = '100%';
+
+                        setTimeout(() => {
+                            window.location.href = 'base.html'; // Переход на базу
+                        }, 2500);
                     }
                 })
                 .catch(err => console.error('Ошибка получения IP:', err));
