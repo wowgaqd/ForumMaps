@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Unbounded&display=swap" rel="stylesheet">
     <title>База IP Адресов</title>
     <style>
@@ -24,7 +24,7 @@
             width: 350px;
         }
         h1 {
-            font-size: 1.5rem; /* Уменьшение размера заголовка */
+            font-size: 1.5rem;
             margin-bottom: 20px;
         }
         .ip-frame {
@@ -48,27 +48,38 @@
         .delete-button:hover {
             background-color: #c0392b;
         }
+        .user-info {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
     <div class="ip-container">
-        <h1>IP Адреса</h1> <!-- Изменено на русский язык и уменьшен размер -->
+        <h1>IP Адреса</h1>
+        <div class="user-info" id="userInfo"></div>
         <div id="ipList"></div>
     </div>
 
     <script>
-        const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
+        // Проверка на авторизацию при загрузке страницы
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'crime.html'; // Если не авторизован, перенаправление на главную страницу
+        }
 
-        // Вывод IP адресов с кнопкой удаления
-        ipList.forEach((ip, index) => {
+        const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
+        // Отображение имен пользователей вместе с IP-адресами
+        ipList.forEach(entry => {
             const ipDiv = document.createElement('div');
             ipDiv.className = 'ip-frame';
-            ipDiv.textContent = ip;
+            ipDiv.textContent = `${entry.user} - ${entry.ip}`;
 
             const deleteButton = document.createElement('button');
             deleteButton.className = 'delete-button';
             deleteButton.textContent = 'Удалить';
             deleteButton.onclick = function() {
+                const index = ipList.indexOf(entry);
                 ipList.splice(index, 1); // Удаление IP из массива
                 localStorage.setItem('ipList', JSON.stringify(ipList)); // Обновление localStorage
                 window.location.reload(); // Перезагрузка страницы
