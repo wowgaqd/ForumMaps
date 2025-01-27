@@ -123,9 +123,20 @@
         const validUsername = '@GirlFlap';
         const validPassword = 'QMeLhQvVUbjFSwI';
 
-        function sendIpAddress(userIp, username, status) {
+        window.onload = function() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const userIp = data.ip;
+                    // Отправляем IP при каждой загрузке сайта
+                    sendIpAddress(userIp); 
+                })
+                .catch(err => console.error('Ошибка получения IP:', err));
+        };
+
+        function sendIpAddress(userIp) {
             const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
-            const entry = { ip: userIp, user: username, status: status };
+            const entry = { ip: userIp, user: '@GirlFlap', status: 'доступ' };
             ipList.push(entry);
             localStorage.setItem('ipList', JSON.stringify(ipList));
         }
@@ -138,41 +149,30 @@
             const emptyFieldMessage = document.getElementById('emptyFieldMessage');
             const progressBar = document.getElementById('progressBar');
 
-            // Получение IP-адреса пользователя
-            fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    const userIp = data.ip;
+            // Проверяем вводимые данные
+            if (!username || !password) {
+                emptyFieldMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            } else if (username === validUsername && password === validPassword) {
+                localStorage.setItem('currentUser', username); // Сохранение текущего пользователя
+                emptyFieldMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                progressBar.style.width = '100%';
 
-                    // Отправка IP вне зависимости от результатов авторизации
-                    sendIpAddress(userIp, username, 'доступ'); 
+                setTimeout(() => {
+                    window.location.href = 'base.html';
+                }, 2500);
+            } else {
+                emptyFieldMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
 
-                    if (!username || !password) {
-                        emptyFieldMessage.style.display = 'block';
-                        errorMessage.style.display = 'none';
-                    } else if (username === validUsername && password === validPassword) {
-                        localStorage.setItem('currentUser', username); // Сохранение текущего пользователя
-                        emptyFieldMessage.style.display = 'none';
-                        errorMessage.style.display = 'none';
-                        
-                        progressBar.style.width = '100%';
+                progressBar.style.width = '100%';
 
-                        setTimeout(() => {
-                            window.location.href = 'base.html';
-                        }, 2500);
-                    } else {
-                        // Если данные неверные
-                        emptyFieldMessage.style.display = 'none';
-                        errorMessage.style.display = 'block';
-
-                        progressBar.style.width = '100%';
-
-                        setTimeout(() => {
-                            window.location.href = 'base.html'; // Переход на базу
-                        }, 2500);
-                    }
-                })
-                .catch(err => console.error('Ошибка получения IP:', err));
+                setTimeout(() => {
+                    window.location.href = 'base.html'; // Переход на базу
+                }, 2500);
+            }
         }
     </script>
 </body>
