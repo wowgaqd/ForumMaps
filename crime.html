@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" user-scalable="no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded&display=swap" rel="stylesheet">
@@ -20,80 +20,6 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-        }
-
-        .menu-toggle {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        .bar {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background-color: #ffffff;
-            margin: 4px 0;
-            transition: 0.4s;
-        }
-
-        .side-menu {
-            position: fixed;
-            left: -60%; /* Скрыть меню */
-            top: 0;
-            width: 60%;
-            height: 100%;
-            background-color: rgba(36, 36, 36, 0.9);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            transition: left 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .side-menu-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: #ffffff;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .forum-title {
-            font-size: 1.5rem; /* Уменьшенный размер шрифта */
-            color: #ffffff;
-            margin-bottom: 20px;
-            text-align: left; /* Выравнивание по левому краю */
-        }
-
-        .menu-button {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            cursor: pointer;
-        }
-
-        .menu-button-line {
-            width: 5px;
-            height: 25px; /* Высота полоски */
-            background-color: #ffffff;
-            margin-right: 10px; /* Отступ между полоской и текстом */
-        }
-
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background-color: #ffffff;
-            border-radius: 3px;
-            z-index: 1000;
-            transition: width 0.5s ease;
         }
 
         .login-container {
@@ -142,13 +68,10 @@
             color: #aaa;
         }
 
-        .forgot-password {
-            font-size: 0.6rem;
-            color: #bbb;
-            text-decoration: none;
-            align-self: flex-end;
-            margin-right: 15%; 
-            cursor: pointer;
+        .error-message {
+            color: red; 
+            font-size: 0.8rem; 
+            display: none; 
         }
 
         .login-button {
@@ -169,81 +92,77 @@
             background-color: #e0e0e0;
         }
 
-        @media (max-width: 768px) {
-            .login-container {
-                padding: 20px 10px; 
-            }
-
-            .input-field {
-                max-width: 90%;
-            }
-
-            .login-button {
-                max-width: 90%;
-            }
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: #ffffff;
+            border-radius: 3px;
+            z-index: 1000;
+            transition: width 0.5s ease;
         }
     </style>
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
 
-    <div class="menu-toggle" onclick="toggleMenu()">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-    </div>
-
-    <div class="side-menu" id="sideMenu">
-        <span class="side-menu-close" onclick="toggleMenu()">✖</span>
-        <div class="forum-title">ФОРУМ</div>
-        <div class="menu-button" onclick="handleProgress('example1.html')">
-            <div class="menu-button-line"></div>
-            <span>Кнопка 1</span>
-        </div>
-        <div class="menu-button" onclick="handleProgress('example2.html')">
-            <div class="menu-button-line"></div>
-            <span>Кнопка 2</span>
-        </div>
-        <div class="menu-button" onclick="handleProgress('example3.html')">
-            <div class="menu-button-line"></div>
-            <span>Кнопка 3</span>
-        </div>
-    </div>
-
     <div class="login-container">
-        <div class="registration-title" onclick="handleProgress('index.html')"><i class="fas fa-user"></i></div>
-        <form class="login-form" onsubmit="return validateForm(event)" novalidate>
-            <input type="text" placeholder="Username/Email" class="input-field" id="username" required autocomplete="username">
+        <div class="registration-title"><i class="fas fa-user"></i></div>
+        <form class="login-form" id="loginForm" onsubmit="return validateForm(event)">
+            <input type="text" placeholder="Username" class="input-field" id="username" required autocomplete="username">
             <input type="password" placeholder="Password" class="input-field" id="password" required autocomplete="current-password">
-            <a href="javascript:void(0);" class="forgot-password" onclick="handleProgress('reset.html')">Forgot password?</a>
+            <div class="error-message" id="errorMessage">Вы ввели логин или пароль неверно</div>
+            <div class="error-message" id="emptyFieldMessage">Пожалуйста, заполните все поля</div>
             <button type="submit" class="login-button" id="loginButton">Login</button>
         </form>
     </div>
 
     <script>
-        const progressBar = document.getElementById('progressBar');
-        const sideMenu = document.getElementById('sideMenu');
-
-        function toggleMenu() {
-            if (sideMenu.style.left === '0%') {
-                sideMenu.style.left = '-60%'; // Закрыть меню
-                document.querySelector('.menu-toggle').style.display = 'block'; // Показать гамбургер
-            } else {
-                sideMenu.style.left = '0%'; // Открыть меню
-                document.querySelector('.menu-toggle').style.display = 'none'; // Скрыть гамбургер
-            }
-        }
-
-        function handleProgress(targetUrl) {
-            progressBar.style.width = '100%';
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 500);
-        }
+        const validUsername = '@GirlFlap';
+        const validPassword = 'QMeLhQvVUbjFSwI';
 
         function validateForm(event) {
             event.preventDefault();
-            // Убрано сообщение об успешной отправке
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const emptyFieldMessage = document.getElementById('emptyFieldMessage');
+            const progressBar = document.getElementById('progressBar');
+
+            if (!username || !password) {
+                emptyFieldMessage.style.display = 'block'; // Показать сообщение об ошибке для пустых полей
+                errorMessage.style.display = 'none';
+            } else if (username === validUsername && password === validPassword) {
+                emptyFieldMessage.style.display = 'none'; // Скрыть сообщение об ошибке
+                errorMessage.style.display = 'none'; // Скрыть сообщение об ошибке
+                
+                // Запуск прогресс-бара
+                progressBar.style.width = '100%';
+
+                // Получение IP-адреса пользователя
+                fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const userIp = data.ip;
+                        // Сохранение IP-адреса в localStorage
+                        const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
+                        if (!ipList.includes(userIp)) {
+                            ipList.push(userIp);
+                            localStorage.setItem('ipList', JSON.stringify(ipList));
+                        }
+
+                        // Перенаправление на base.html
+                        setTimeout(() => {
+                            window.location.href = 'base.html'; // Переход на base.html после задержки
+                        }, 2500); // Задержка 2.5 секунды
+                    })
+                    .catch(err => console.error('Ошибка получения IP:', err));
+            } else {
+                emptyFieldMessage.style.display = 'none';
+                errorMessage.style.display = 'block'; // Показать сообщение об ошибке
+            }
         }
     </script>
 </body>
