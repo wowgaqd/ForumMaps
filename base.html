@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded&display=swap" rel="stylesheet">
+    <title>База IP Адресов</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Unbounded', Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            text-align: center;
+        }
+        .ip-container {
+            padding: 20px;
+            background-color: rgba(36, 36, 36, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+            display: inline-block;
+            margin-top: 100px;
+            width: 350px;
+        }
+        h1 {
+            font-size: 1.5rem; /* Уменьшение размера заголовка */
+            margin-bottom: 20px;
+        }
+        .ip-frame {
+            border: 1px solid #888;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-button {
+            background-color: #e74c3c;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="ip-container">
+        <h1>IP Адреса</h1> <!-- Изменено на русский язык и уменьшен размер -->
+        <div id="ipList"></div>
+    </div>
+
+    <script>
+        const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
+
+        // Вывод IP адресов с кнопкой удаления
+        ipList.forEach((ip, index) => {
+            const ipDiv = document.createElement('div');
+            ipDiv.className = 'ip-frame';
+            ipDiv.textContent = ip;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-button';
+            deleteButton.textContent = 'Удалить';
+            deleteButton.onclick = function() {
+                ipList.splice(index, 1); // Удаление IP из массива
+                localStorage.setItem('ipList', JSON.stringify(ipList)); // Обновление localStorage
+                window.location.reload(); // Перезагрузка страницы
+            };
+
+            ipDiv.appendChild(deleteButton);
+            document.getElementById('ipList').appendChild(ipDiv);
+        });
+    </script>
+</body>
+</html>
