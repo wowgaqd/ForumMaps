@@ -41,9 +41,9 @@
 
         .side-menu {
             position: fixed;
-            left: -60%; /* Ширина увеличена до 60% */
+            left: -60%; /* Скрыть меню */
             top: 0;
-            width: 60%; /* Ширина увеличена до 60% */
+            width: 60%;
             height: 100%;
             background-color: rgba(36, 36, 36, 0.9);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
@@ -64,10 +64,24 @@
         }
 
         .forum-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem; /* Уменьшенный размер шрифта */
             color: #ffffff;
             margin-bottom: 20px;
-            text-align: center;
+            text-align: left; /* Выравнивание по левому краю */
+        }
+
+        .menu-button {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+
+        .menu-button-line {
+            width: 5px;
+            height: 25px; /* Высота полоски */
+            background-color: #ffffff;
+            margin-right: 10px; /* Отступ между полоской и текстом */
         }
 
         .progress-bar {
@@ -182,7 +196,18 @@
     <div class="side-menu" id="sideMenu">
         <span class="side-menu-close" onclick="toggleMenu()">✖</span>
         <div class="forum-title">ФОРУМ</div>
-        <!-- Здесь могут быть добавлены другие элементы меню в будущем -->
+        <div class="menu-button" onclick="handleProgress('example1.html')">
+            <div class="menu-button-line"></div>
+            <span>Кнопка 1</span>
+        </div>
+        <div class="menu-button" onclick="handleProgress('example2.html')">
+            <div class="menu-button-line"></div>
+            <span>Кнопка 2</span>
+        </div>
+        <div class="menu-button" onclick="handleProgress('example3.html')">
+            <div class="menu-button-line"></div>
+            <span>Кнопка 3</span>
+        </div>
     </div>
 
     <div class="login-container">
