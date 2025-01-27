@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(26, 26, 26, 0.8)), #1a1a1a;
+            color: #e0e0e0;
+            font-family: 'Unbounded', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #ffffff;
+            margin: 4px 0;
+            transition: 0.4s;
+        }
+
+        .side-menu {
+            position: fixed;
+            left: -50%;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background-color: rgba(36, 36, 36, 0.9);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+
+        .side-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: #ffffff;
+            border-radius: 3px;
+            z-index: 1000;
+            transition: width 0.5s ease;
+        }
+
+        .login-container {
+            background-color: rgba(36, 36, 36, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            width: 100%;
+            max-width: 350px; 
+            padding: 30px 15px; 
+            backdrop-filter: blur(15px);
+        }
+
+        .registration-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px; 
+            cursor: pointer;
+            color: #ffffff;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-field {
+            width: 90%;
+            max-width: 250px;
+            padding: 8px; 
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: #e0e0e0;
+            font-size: 0.8rem; 
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #ffffff;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: #aaa;
+        }
+
+        .forgot-password {
+            font-size: 0.6rem;
+            color: #bbb;
+            text-decoration: none;
+            align-self: flex-end;
+            margin-right: 15%; 
+            cursor: pointer;
+        }
+
+        .login-button {
+            width: 90%;
+            max-width: 120px; 
+            padding: 10px;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.8rem; 
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            background-color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 20px 10px; /* Уменьшенные отступы для мобильных устройств */
+            }
+
+            .input-field {
+                max-width: 90%; /* Ширина полей на мобильных устройствах */
+            }
+
+            .login-button {
+                max-width: 90%; /* Ширина кнопки на мобильных устройствах */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+
+    <div class="side-menu" id="sideMenu">
+        <span class="side-menu-close" onclick="toggleMenu()">✖</span>
+        <!-- Здесь могут быть добавлены другие элементы меню в будущем -->
+    </div>
+
+    <div class="login-container">
+        <div class="registration-title" onclick="handleProgress('index.html')"><i class="fas fa-user"></i></div>
+        <form class="login-form" onsubmit="return validateForm(event)" novalidate>
+            <input type="text" placeholder="Username/Email" class="input-field" id="username" required autocomplete="username">
+            <input type="password" placeholder="Password" class="input-field" id="password" required autocomplete="current-password">
+            <a href="javascript:void(0);" class="forgot-password" onclick="handleProgress('reset.html')">Forgot password?</a>
+            <button type="submit" class="login-button" id="loginButton">Login</button>
+        </form>
+    </div>
+
+    <script>
+        const progressBar = document.getElementById('progressBar');
+        const sideMenu = document.getElementById('sideMenu');
+
+        function toggleMenu() {
+            if (sideMenu.style.left === '0%') {
+                sideMenu.style.left = '-50%'; // Закрыть меню
+            } else {
+                sideMenu.style.left = '0%'; // Открыть меню
+            }
+        }
+
+        function handleProgress(targetUrl) {
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500);
+        }
+
+        function validateForm(event) {
+            event.preventDefault();
+            // Убрано сообщение об успешной отправке
+        }
+    </script>
+</body>
+</html>
