@@ -82,12 +82,12 @@
     <script>
         // Проверка на авторизацию при загрузке страницы
         const currentUser = localStorage.getItem('currentUser');
+        const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
         if (!currentUser) {
             document.getElementById('statusMessage').style.display = 'flex';
             document.getElementById('ipContainer').style.display = 'none'; // Скрываем контейнер IP
             sendIp(); // Отправляем IP с недоступностью
         } else {
-            const ipList = JSON.parse(localStorage.getItem('ipList')) || [];
             document.getElementById('userInfo').textContent = `Вы авторизованы как: ${currentUser}`;
 
             // Вывод IP адресов с именами пользователей
